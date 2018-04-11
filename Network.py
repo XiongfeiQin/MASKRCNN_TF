@@ -1,8 +1,7 @@
 """
-during training process:
-input: 160*160
-output: 20*20 = 400
-total: *8 downsampling
+function:parent class of backbone network
+date:2018/4/11
+author: Junior Liu
 """
 import tensorflow as tf
 import numpy as np
@@ -10,7 +9,7 @@ from functools import reduce
 
 class Network:
 
-    def __init__(self, Network_path=None, trainable=True, dropout=0.5):
+    def __init__(self, Network_path=None, trainable=True):
         if Network_path is not None:
             self.data_dict = np.load(Network_path, encoding='latin1').item()
         else:
@@ -21,7 +20,6 @@ class Network:
         # dictionary to store the value of all the variable
         # format: self.var_dict[(name, idx)] = var
         self.trainable = trainable
-        self.dropout = dropout
 
 
     def build(self, image, batch_size, train_mode=True):

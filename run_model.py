@@ -1,6 +1,9 @@
 """
-training and testing the fingerprint network...
+function；training and testing MRCNN
+date:
+author: Junior Liu
 """
+
 import tensorflow as tf
 import Network
 from ResNet50 import ResNet50

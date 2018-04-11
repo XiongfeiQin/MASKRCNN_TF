@@ -1,12 +1,18 @@
+'''
+function: ResNet50 backbone definition
+date:2018/4/11
+author: Junior Liu
+'''
+
 from Network import Network
 import tensorflow as tf
 import numpy as np
 from functools import reduce
 
 class ResNet50(Network):
-    def __init__(self, Network_path=None, trainable=True, dropout=0.5):
-        Network.__init__(Network_path, trainable, dropout)
-        print('ResNet50')
+    def __init__(self, Network_path=None, trainable=True):
+        Network.__init__(Network_path, trainable)
+        print('Backbone:ResNet50')
 
     def build(self, image, batch_size, train_mode=True):
         x = self.conv_layer(image, 3, 64, name='conv1', conv_size=7, stride=2)
@@ -23,12 +29,14 @@ class ResNet50(Network):
         x = self.bottleneck0(x, 512, 128, 128, 512, 'bottle33')
         C3 = x = self.bottleneck0(x, 512, 128, 128, 512, 'bottle34')
         # Stage 4
-        x = conv_block(x, 3, [256, 256, 1024], stage=4, block='a')
-        block_count = {"resnet50": 5, "resnet101": 22}[architecture]
-        for i in range(block_count):
-            x = identity_block(x, 3, [256, 256, 1024], stage=4, block=chr(98 + i))
+        x = self.bottleneck1(x, 512, 256, 256, 1024, 'bottle41')
+        for i in range(5):
+            x = self.bottleneck0(x, 1024, 256, 256, 1024, 'bottle4'+str(i+2))
         C4 = x
-        pass
+        # generate pyramid
+
+
+        return [C1, C2, C3, C4]
 
 
     def bottleneck0(self, inputs, in_channels, m1, m2, out_channels, bottle_name):
